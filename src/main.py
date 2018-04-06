@@ -10,6 +10,10 @@ log file with particular order based on parsed data. This challenge
 simulates a backend app receiving streaming request information, analyzing
 it on the fly, and passing off the summary results (as they appear) to
 some other system, e.g. for analysis and visualization.
+
+The goal of the implementation below is to showcase a solution that can
+be trivially transformed into an app that has distributed workers in order
+to be scaled up.
 """
 from __future__ import absolute_import
 from __future__ import print_function
@@ -44,6 +48,7 @@ parser.add_argument("-t", "--dtfmt", type=str, help="log date-time format",
                     default="%Y-%m-%d %H:%M:%S")
 
 
+# This class becomes a, e.g., Celery task in a scalable solution
 class Task(object):
     """Class that tracks and processes a user's EDGAR session."""
     def clean(self, message):
@@ -116,6 +121,7 @@ class App(object):
                     datetimei=datetimei.strftime(self.dtfmt),
                     datetimef=datetimef.strftime(self.dtfmt))
 
+    # In a scalable solution, may need to consider removing dormant Task instances
     def flush_tasks(self, t):
         """
         Update current tasks (sessions) time and flush completed sessions.
@@ -128,6 +134,7 @@ class App(object):
             if entry:
                 self.output_queue.put(self.create_entry(entry))
                 
+    # This would be the target of a thread in a scalable solution
     def _output_writer(self):
         """
         Writes a single, correctly formated, entry to the output log.
@@ -193,6 +200,9 @@ class App(object):
         self.entryfmt = entryfmt      # Not really useful right now since create_entry isn't flexible
         self.tasks = OrderedDict()    # Keys are ip addrs, values are instances of Task
         self.output_queue = queue.Queue()
+        # For a scalable solution we would use a separate thread for processing the
+        # queue on the fly instead of at the end; no logic needs to change regarding
+        # the ordering of the final entries.
 
         
 def launcher():
