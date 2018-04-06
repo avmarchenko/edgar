@@ -99,3 +99,6 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+insight_testsuite/temp/
+insight_testsuite/results.txt
