@@ -4,14 +4,21 @@
 #########################################
 EDGAR Analytics Insight Data Challenge
 #########################################
+Challenge: construct an application that will parse log files from the
+governments EDGAR system. The parsing function should generate a summary
+log file with particular order based on parsed data. This challenge
+simulates a backend app receiving streaming request information, analyzing
+it on the fly, and passing off the summary results (as they appear) to
+some other system, e.g. for analysis and visualization.
 """
 from __future__ import absolute_import
 from __future__ import print_function
-#from __future__ import division
-import sys
 import csv
-import queue
-import argparse    # Specific to this challenge, not a scalable solution
+try:    # py2 compatibility
+    import queue
+except ImportError:
+    import Queue as queue
+import argparse
 from collections import deque, OrderedDict
 from datetime import datetime
 
@@ -47,10 +54,6 @@ class Task(object):
     def add(self, message):
         """Add a new message related to this task's id."""
         self.messages.append(self.clean(message))
-
-    def end(self):
-        """Shutdown the task and flush all existing sessions."""
-        return self.messages
 
     def flush(self, curdt):
         """
