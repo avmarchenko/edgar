@@ -9,7 +9,7 @@ style/order. The focus is on building a working, scalable, well
 documented, tested application.
 
 ## Information
-This solution presents a solution using only Python standard libraries.
+This is a solution using only Python standard libraries.
 It was tested on Python 2.7 and Python 3.6. The structure used by
 this solution is not the fastest for serial operation but can be
 trivially distributed to a collection of workers.
