@@ -60,6 +60,7 @@ class Task(object):
         """Add a new message related to this task's id."""
         self.messages.append(self.clean(message))
 
+    # In a scalable solution this would be performed on a timer
     def flush(self, curdt):
         """
         Perform introspection and flush any completed sessions.
@@ -122,6 +123,7 @@ class App(object):
                     datetimef=datetimef.strftime(self.dtfmt))
 
     # In a scalable solution, may need to consider removing dormant Task instances
+    # and note that flushing will be performed on a timer.
     def flush_tasks(self, t):
         """
         Update current tasks (sessions) time and flush completed sessions.
